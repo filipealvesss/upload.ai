@@ -10,7 +10,7 @@ export async function createTranscriptionRoute(app: FastifyInstance) {
       videoId: z.string().uuid(),
     })
 
-    const { videoId } = paramsSchema.parse(req.params)  
+    const { videoId } = paramsSchema.parse(req.params)
 
     const bodySchema = z.object({
       prompt: z.string(),
@@ -20,7 +20,7 @@ export async function createTranscriptionRoute(app: FastifyInstance) {
 
     const video = await prisma.video.findUniqueOrThrow({
       where: {
-        id: videoId, 
+        id: videoId,
       }
     })
 
@@ -37,15 +37,18 @@ export async function createTranscriptionRoute(app: FastifyInstance) {
     })
 
     const transcription = response.text
+
     await prisma.video.update({
       where: {
         id: videoId,
       },
       data: {
         transcription,
-      },
+      }
     })
 
-    return { transcription }
+    return {
+      transcription,
+    }
   })
 }
